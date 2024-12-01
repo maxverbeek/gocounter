@@ -24,6 +24,22 @@
             cobra-cli
           ];
         };
+
+        overlays.default = final: prev: {
+          gocount = final.buildGoModule {
+            pname = "gocount";
+            version = "0.1.0";
+            src = ./.;
+            subPackages = [ "cmd/gocount" ];
+            vendorHash = null;
+          };
+        };
+
+        packages.default =
+          (import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.${system}.default ];
+          }).gocount;
       }
     );
 }
